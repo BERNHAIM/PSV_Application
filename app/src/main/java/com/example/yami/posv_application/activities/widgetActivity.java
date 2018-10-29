@@ -43,7 +43,6 @@ public class widgetActivity extends BaseActivity{
             fis = openFileInput("internal.txt");
 
             SmsManager smsManager = SmsManager.getDefault();
-            System.out.print("list size : "+smslist.size());
 
             BufferedReader iReader = new BufferedReader(new InputStreamReader((fis)));
             data = iReader.readLine();
