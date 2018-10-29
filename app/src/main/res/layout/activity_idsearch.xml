@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.yami.posv_application.user_management.IdSearchActivity"
+    tools:layout_editor_absoluteY="25dp">
+
+    <!--아이디 찾기-->
+    <EditText
+        android:id="@+id/emailText"
+        android:layout_width="277dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
+        android:hint="찾고자하는 아이디의 이메일"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="67dp"
+        android:layout_marginTop="140dp"
+
+        />
+    <Spinner
+        android:id="@+id/emailSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/default_font_size"
+        android:textColor="@color/darkblue"
+        android:gravity="right"></Spinner>
+    <Button
+        android:id="@+id/searchbtn"
+        android:layout_width="184dp"
+        android:layout_height="43dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="아이디 찾기"
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="229dp" />
+
+</TableLayout>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sl="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        sl:scale_base_height="90"
+        sl:scale_base_width="720"
+        android:id="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/Blue_actionbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="MAIN MENU"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            sl:scale_height="90"
+            sl:scale_left="0"
+            sl:scale_textsize="40"
+            sl:scale_top="0"
+            sl:scale_width="720"
+            tools:ignore="MissingPrefix" />
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/LBS_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/xml_border"
+        android:onClick="btn_LBS_menu"
+        sl:scale_base_height="250"
+        sl:scale_base_width="700">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            sl:scale_height="250"
+            sl:scale_left="0"
+            sl:scale_textsize="40"
+            sl:scale_top="10"
+            sl:scale_width="700"
+            tools:ignore="MissingPrefix">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/background_lbs_button"
+                android:padding="5dp"
+                android:src="@drawable/lbs_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="LBS"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightgray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="전국의 위험지역을 알아봐요!"
+                android:layout_gravity="center_horizontal"
+                android:textSize="17sp"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/VIOLENCE_BOARD_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/LBS_menu"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        sl:scale_base_height="250"
+        sl:scale_base_width="700">
+
+        <LinearLayout
+            android:id="@+id/VIOLENCE_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:onClick="btn_Violence_menu"
+            android:orientation="vertical"
+            android:background="@drawable/xml_border"
+            sl:scale_height="250"
+            sl:scale_left="10"
+            sl:scale_textsize="40"
+            sl:scale_top="0"
+            sl:scale_width="340"
+            tools:ignore="MissingPrefix">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/background_violence_button"
+                android:padding="10dp"
+                android:src="@drawable/violence_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="폭력사례"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightgray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="학교폭력의 사례"
+                android:textSize="17sp"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/BOARD_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:onClick="btn_BOARD_menu"
+            android:orientation="vertical"
+            android:background="@drawable/xml_border"
+            sl:scale_height="250"
+            sl:scale_left="360"
+            sl:scale_textsize="40"
+            sl:scale_top="0"
+            sl:scale_width="330"
+            tools:ignore="MissingPrefix">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/background_board_button"
+                android:padding="10dp"
+                android:src="@drawable/board_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="익명게시판"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightgray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="익명으로 대화해요!"
+                android:textSize="17sp"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/COUNSELOR_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/VIOLENCE_BOARD_menu"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/xml_border"
+        sl:scale_base_height="200"
+        sl:scale_base_width="700">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            sl:scale_height="250"
+            sl:scale_left="0"
+            sl:scale_textsize="40"
+            sl:scale_top="7"
+            sl:scale_width="700"
+            tools:ignore="MissingPrefix">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/background_counselor_button"
+                android:padding="5dp"
+                android:src="@drawable/counselor_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="상담사연결"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/FIND_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/COUNSELOR_menu"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/xml_border"
+        sl:scale_base_height="250"
+        sl:scale_base_width="700">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            sl:scale_height="250"
+            sl:scale_left="0"
+            sl:scale_textsize="20"
+            sl:scale_top="7"
+            sl:scale_width="700"
+            tools:ignore="MissingPrefix">
+
+            <ImageView
+                android:id="@+id/help_logo"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/background_find_button"
+                android:padding="10dp"
+                android:layout_margin="15dp"
+                android:src="@drawable/help" />
+
+            <TextView
+                android:id="@+id/findText"
+                android:layout_toRightOf="@+id/help_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="15dp"
+                android:text="@string/FIND_title"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/searchText"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@id/findText"
+                android:layout_alignStart="@+id/findText"
+                android:layout_alignEnd="@+id/findText"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/lightGray"
+                android:textColorHint="@color/lightgray2"
+                android:hint="@string/FIND_description"
+                android:textSize="20sp"/>
+
+            <Button
+                android:id="@+id/searchBtn"
+                android:layout_width="50dp"
+                android:layout_height="38dp"
+                android:layout_below="@+id/findText"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="22dp"
+                android:background="@color/find_color"
+                android:text="찾기"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+</RelativeLayout>
+

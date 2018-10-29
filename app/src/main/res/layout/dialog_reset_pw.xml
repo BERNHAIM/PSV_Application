@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.yami.posv_application.user_management.PwResetActivity"
+    tools:layout_editor_absoluteY="25dp">
+
+    <!--비밀번호 초기화 클릭시 생성될 커스텀 대화상자 레이아웃-->
+    <EditText
+        android:id="@+id/pwText"
+        android:layout_width="277dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:ems="10"
+        android:hint="새로운 비밀번호를 입력해주세요"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="67dp"
+        android:layout_marginTop="20dp"/>
+</TableLayout>

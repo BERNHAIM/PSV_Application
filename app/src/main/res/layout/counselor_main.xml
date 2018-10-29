@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/Counselor_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/phoneCall_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="170dp"
+        android:background="@drawable/shape"
+        android:drawableLeft="@drawable/ic_dehaze_black_24dp"
+        android:gravity="right|center_vertical"
+        android:padding="15sp"
+        android:text="  전화연결 ( 1388 )"
+        android:textSize="22sp"
+        android:onClick="btn_Dial_To_Counselor"/>
+
+    <Button
+        android:id="@+id/kakaotalk_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="221dp"
+        android:background="@drawable/shape"
+        android:drawableLeft="@drawable/ic_kakaotalk_logo_svg_vector"
+        android:gravity="right|center_vertical"
+        android:padding="15sp"
+        android:text="  카카오톡 1 : 1 채팅"
+        android:textSize="22sp"
+        android:onClick="btn_Kakao_To_Counselor"/>
+
+</RelativeLayout>

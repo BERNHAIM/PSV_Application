@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/violence_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/spacer_5"
+        android:background="@color/violence_color">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_textsms_black_24dp"/>
+
+    <TextView
+        android:id="@+id/newsSubject"
+        android:layout_toRightOf="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="빵셔틀 폭행사건"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:fontFamily="@font/godom"/>
+
+
+        <TextView
+            android:id="@+id/upTodate"
+            android:layout_below="@id/newsSubject"
+            android:layout_toRightOf="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2018-01-01"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/godom"/>
+
+        <TextView
+            android:id="@+id/area"
+            android:layout_below="@id/newsSubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:text="서울"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:fontFamily="@font/godom"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_below="@id/violence_info"
+        android:textSize="20sp"
+        android:textColor="#2e2e2e"
+        android:fontFamily="@font/godom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/xml_border" />
+
+</LinearLayout>
