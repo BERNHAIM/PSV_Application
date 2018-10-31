@@ -19,7 +19,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.yami.posv_application.activities.MainActivity;
 import com.example.yami.posv_application.R;
 import com.example.yami.posv_application.notice_board.PostActivity;
-import com.example.yami.posv_application.notice_board.WritePostActivity;
+import com.example.yami.posv_application.activities.BaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.regex.Pattern;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity{
 
     public InputFilter filterAlphaNum;
 
@@ -42,8 +42,8 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText idText = (EditText) findViewById(R.id.idText);
         final EditText passwordText = (EditText) findViewById(R.id.passwordText);
-        final Button loginbtn = (Button) findViewById(R.id.loginbtn);
-        final Button registerbtn = (Button) findViewById(R.id.registerbtn);
+        final TextView loginbtn = (TextView) findViewById(R.id.loginbtn);
+        final TextView registerbtn = (TextView) findViewById(R.id.registerbtn);
         final TextView idSearchBtn = (TextView) findViewById(R.id.idSearchBtn);
         final TextView pwSearchBtn = (TextView) findViewById(R.id.pwSearchBtn);
 

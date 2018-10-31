@@ -1,9 +1,9 @@
 package com.example.yami.posv_application.user_management;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.View;
@@ -11,25 +11,31 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import com.example.yami.posv_application.BackPressHandler;
 import com.example.yami.posv_application.R;
+import com.example.yami.posv_application.activities.BaseActivity;
+import com.example.yami.posv_application.activities.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.regex.Pattern;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
     public InputFilter filterKor;
     public InputFilter filterAlphaNum;
     Spinner emailSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regist);
 
@@ -44,6 +50,21 @@ public class RegisterActivity extends AppCompatActivity {
         final EditText passwordText = (EditText) findViewById(R.id.passwordText);
         final EditText nameText = (EditText) findViewById(R.id.nameText);
         final EditText emailText = (EditText) findViewById(R.id.emailText);
+
+        final TextView backToLogin = (TextView) findViewById(R.id.backToLogin);
+
+
+
+        backToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent t = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(t);
+
+                finish();
+
+            }
+        });
 
         //입력하는 값을 영서,숫자로 제한하는 함수
         filterAlphaNum = new InputFilter() {
@@ -178,5 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 }

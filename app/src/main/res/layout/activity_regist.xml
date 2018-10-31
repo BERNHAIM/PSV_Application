@@ -1,80 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context="com.example.yami.posv_application.user_management.RegisterActivity"
-tools:layout_editor_absoluteY="25dp">
+tools:layout_editor_absoluteY="25dp"
+    android:background="#2b2b2b">
 
-    <!--회원가입-->
-    <EditText
-        android:id="@+id/idText"
-        android:layout_width="277dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="아이디"
-        android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="21dp"
-        tools:layout_editor_absoluteY="67dp"
-        android:layout_marginTop="90dp"/>
+    <TableLayout
+        android:id="@+id/tableID"
+        android:layout_width="303dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:gravity="center">
 
-    <EditText
-        android:id="@+id/passwordText"
-        android:layout_width="281dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="패스워드"
-        android:inputType="textPassword"
-        tools:layout_editor_absoluteX="19dp"
-        tools:layout_editor_absoluteY="103dp" />
+        <EditText
+            android:id="@+id/idText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
+            android:ems="10"
+            android:hint="ID"
+            android:inputType="textPersonName"
+            android:textColorHint="#73ffffff"
+            android:textSize="20sp"
+            android:theme="@style/EditTheme"
+            tools:layout_editor_absoluteX="21dp"
+            tools:layout_editor_absoluteY="67dp" />
 
-    <EditText
-        android:id="@+id/nameText"
-        android:layout_width="281dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="이름"
-        android:inputType="textPersonName"
-        android:privateImeOptions="defaultInputmode=korean;"
-        tools:layout_editor_absoluteX="19dp"
-        tools:layout_editor_absoluteY="139dp" />
+        <EditText
+            android:id="@+id/passwordText"
+            android:layout_width="281dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="PASSWORD"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="#73ffffff"
+            android:textSize="20sp"
+            android:theme="@style/EditTheme"
+            tools:layout_editor_absoluteX="19dp"
+            tools:layout_editor_absoluteY="103dp" />
 
-    <EditText
-        android:id="@+id/emailText"
-        android:layout_width="276dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="이메일"
-        android:inputType="textPersonName"
-        android:privateImeOptions="defaultInputmode=english;"
-        tools:layout_editor_absoluteX="22dp"
-        tools:layout_editor_absoluteY="176dp" />
-    <Spinner
-        android:id="@+id/registSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:textSize="@dimen/default_font_size"
-        android:textColor="@color/darkblue"
-        android:gravity="right"></Spinner>
+        <EditText
+            android:id="@+id/nameText"
+            android:layout_width="281dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="NAME"
+            android:inputType="textPersonName"
+            android:privateImeOptions="defaultInputmode=korean;"
+            android:textColor="@color/white"
+            android:textColorHint="#73ffffff"
+            android:textSize="20sp"
+            android:theme="@style/EditTheme"
+            tools:layout_editor_absoluteX="19dp"
+            tools:layout_editor_absoluteY="139dp" />
+
+        <EditText
+            android:id="@+id/emailText"
+            android:layout_width="276dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="EMAIL"
+            android:inputType="textPersonName"
+            android:privateImeOptions="defaultInputmode=english;"
+            android:textColor="@color/white"
+            android:textColorHint="#73ffffff"
+            android:textSize="20sp"
+            android:theme="@style/EditTheme"
+            tools:layout_editor_absoluteX="22dp"
+            tools:layout_editor_absoluteY="176dp" />
+
+        <Spinner
+            android:id="@+id/registSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:gravity="right"
+            android:background="#27ffffff"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_font_size" />
+
+
+    </TableLayout>
+
     <Button
         android:id="@+id/registerbtn"
         android:layout_width="184dp"
         android:layout_height="52dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:text="가입하기"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="229dp" />
-</TableLayout>
+        android:layout_below="@id/tableID"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimary"
+        android:layout_marginTop="10dp"
+        android:text="회 원 가 입"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/registerbtn"
+        android:layout_alignStart="@+id/registerbtn"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal|center"
+        android:text="이미 가입되어 있나요?"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/backToLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/registerbtn"
+        android:layout_alignStart="@+id/registerbtn"
+        android:layout_marginTop="13dp"
+        android:layout_marginLeft="140dp"
+        android:gravity="center_horizontal|center"
+        android:text="로그인"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>
