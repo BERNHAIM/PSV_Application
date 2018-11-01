@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-tools:context="com.example.yami.posv_application.notice_board.WritePostActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp"
+    android:padding="30dp"
+    android:background="@drawable/board_border"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.yami.posv_application.notice_board.WritePostActivity">
 
     <!--글쓰기-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/l1"
@@ -22,22 +24,48 @@ tools:context="com.example.yami.posv_application.notice_board.WritePostActivity"
             android:hint="제목"
             />
     </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/l1"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="익명"
-                android:id="@+id/check1"/>
-        </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/l1"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="180dp"
+            android:text="익명"
+            android:id="@+id/check1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/xml_border"
+        app:layout_constraintTop_toBottomOf="@+id/l1"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <Spinner
+            android:id="@+id/forumSpinner"
+            android:layout_width="100dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/default_font_size"
+            android:textColor="@color/darkblue"
+            android:gravity="center"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/xml_border"
+        android:layout_marginTop="40dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -59,6 +87,7 @@ tools:context="com.example.yami.posv_application.notice_board.WritePostActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/l3"
+        android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@+id/l2"
         android:layout_marginTop="15dp">
 
@@ -66,7 +95,6 @@ tools:context="com.example.yami.posv_application.notice_board.WritePostActivity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="등록"
-            android:layout_marginLeft="100dp"
             android:id="@+id/btnReg"
             />
 
@@ -75,8 +103,7 @@ tools:context="com.example.yami.posv_application.notice_board.WritePostActivity"
             android:layout_height="wrap_content"
             android:text="취소"
             android:layout_gravity="center_vertical"
-            android:id="@+id/btnCancel"
-            />
+            android:id="@+id/btnCancel" />
     </LinearLayout>
 
 

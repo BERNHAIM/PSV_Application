@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
@@ -15,24 +16,27 @@
         android:layout_height="wrap_content"
         android:id="@+id/postName"
         android:text="Title"
-        android:textSize="20dp"
-        android:textColor="#00a7f5"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:textColor="#282828"
         />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
         android:id="@+id/userID"
         android:text="userID"
-        android:textSize="20dp"
-        android:textColor="#f92a3f"
+        android:textSize="10dp"
+        android:textColor="@color/gray"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/date"
         android:text="Date"
-        android:textSize="16dp"
-        android:textColor="#a902f0"
+        android:textSize="10dp"
+        android:textColor="@color/gray"
         />
 
 </LinearLayout>

@@ -18,7 +18,7 @@
         android:ems="10"
         android:hint="USERNAME"
         android:inputType="textPersonName"
-        android:textSize="16sp" />
+        android:textSize="20sp" />
 
 
     <EditText
@@ -34,7 +34,7 @@
         android:ems="10"
         android:hint="PASSWORD"
         android:inputType="textPassword"
-        android:textSize="16sp" />
+        android:textSize="20sp" />
 
 
     <TextView

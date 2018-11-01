@@ -31,7 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.regex.Pattern;
 
-public class LoginActivity extends BaseActivity{
+public class LoginActivity extends BaseActivity {
 
     public InputFilter filterAlphaNum;
 
@@ -209,7 +209,6 @@ public class LoginActivity extends BaseActivity{
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("postList", result);//파싱한 값을 넘겨줌
             LoginActivity.this.startActivity(intent);//Activity로 넘어감
-
         }
     }
 

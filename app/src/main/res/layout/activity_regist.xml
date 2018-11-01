@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="com.example.yami.posv_application.user_management.RegisterActivity"
-tools:layout_editor_absoluteY="25dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.yami.posv_application.user_management.RegisterActivity"
+    tools:layout_editor_absoluteY="25dp"
     android:background="#2b2b2b">
 
     <TableLayout
@@ -25,6 +25,7 @@ tools:layout_editor_absoluteY="25dp"
             android:ems="10"
             android:hint="ID"
             android:inputType="textPersonName"
+            android:textColor="@color/white"
             android:textColorHint="#73ffffff"
             android:textSize="20sp"
             android:theme="@style/EditTheme"

@@ -23,5 +23,9 @@
         <item name="colorAccent">#5cffffff</item>
         <item name="colorControlNormal">#ffffff</item>
     </style>
+    <style name="postEditTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">#fff</item>
+        <item name="colorControlNormal">@color/board_color</item>
+    </style>
 
 </resources>

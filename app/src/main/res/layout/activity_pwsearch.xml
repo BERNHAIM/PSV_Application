@@ -1,60 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.yami.posv_application.user_management.PwResetActivity"
-    tools:layout_editor_absoluteY="25dp">
+    tools:layout_editor_absoluteY="25dp"
+    android:background="#2b2b2b">
 
-    <!--패스워드 초기화(찾기)-->
-    <EditText
-        android:id="@+id/idText"
-        android:layout_width="277dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="아이디를 입력해주세요"
-        android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="21dp"
-        tools:layout_editor_absoluteY="67dp"
-        android:layout_marginTop="90dp"/>
+    <TableLayout
+        android:id="@+id/tableID2"
+        android:layout_width="303dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp"
+        android:gravity="center"
+        android:background="#2dffffff">
 
-    <EditText
-        android:id="@+id/emailText"
-        android:layout_width="281dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:ems="10"
-        android:hint="이메일을 입력해주세요"
-        android:inputType="textEmailAddress"
-        tools:layout_editor_absoluteX="19dp"
-        tools:layout_editor_absoluteY="103dp" />
-    <Spinner
-        android:id="@+id/pwdSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:textSize="@dimen/default_font_size"
-        android:textColor="@color/darkblue"
-        android:gravity="right"></Spinner>
+        <!--패스워드 초기화(찾기)-->
+        <EditText
+            android:id="@+id/idText"
+            android:layout_width="277dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="아이디를 입력해주세요"
+            android:inputType="textPersonName"
+            android:textSize="20sp"
+            android:textColorHint="#81ffffff"/>
+
+        <EditText
+            android:id="@+id/emailText"
+            android:layout_width="281dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:hint="이메일을 입력해주세요"
+            android:inputType="textEmailAddress"
+            android:textSize="20sp"
+            android:textColorHint="#81ffffff" />
+
+
+        <Spinner
+            android:id="@+id/pwdSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/default_font_size"
+            android:textColor="@color/white"
+            android:gravity="right"></Spinner>
+    </TableLayout>
+
 
     <Button
         android:id="@+id/resetBtn"
         android:layout_width="184dp"
         android:layout_height="50dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="281dp"
         android:text="비밀번호 초기화"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="229dp" />
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/stored_pw"/>
-</TableLayout>
+</RelativeLayout>

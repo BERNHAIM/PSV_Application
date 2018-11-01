@@ -108,19 +108,18 @@ public class RegisterActivity extends BaseActivity {
                 String userPassword = passwordText.getText().toString();
                 String userName = nameText.getText().toString();
                 String userEmail = emailText.getText().toString() + email; //이메일 뒤에 @도메인 까지 저장
-                Toast.makeText(getApplicationContext(), userEmail, Toast.LENGTH_SHORT).show();
 
                 //아이디 입력을 최소 5자 초과로 받기
                 if (userID.length() < 5) {
                     if (userID.length() == 0)
                         Toast.makeText(getApplicationContext(), "아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), "5자 이상의 아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "6자 이상의 아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
 
                     //비밀번호 입력을 최소 5자 초과로 받기
                 } else if (userPassword.length() < 5) {
                     if (userPassword.length() == 0)
                         Toast.makeText(getApplicationContext(), "패스워드를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), "5자 이상의 패스워드를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "8자 이상의 패스워드를 입력해주세요.", Toast.LENGTH_SHORT).show();
 
                //사용자의 이름을 1자 초과로 받기
                 } else if (userName.length() < 1) {
@@ -193,8 +192,8 @@ public class RegisterActivity extends BaseActivity {
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 //3. RequestQueue에 RequestObject를 넘겨준다.
 
-                //아이디를 6자이상, 비밀번호를 9자 이상, 이름을 2글자 이상, 이메일을 8자 이상으로 받기
-                if (userID.length() >= 6 && userPassword.length() >= 9 && userName.length() >= 2 && userEmail.length() >= 8)
+                //아이디를 6자이상, 비밀번호를 8자 이상, 이름을 2글자 이상, 이메일을 6자 이상으로 받기
+                if (userID.length() >= 6 && userPassword.length() >= 8 && userName.length() >= 2 && userEmail.length() >= 6)
                     queue.add(registerRequest);
             }
         });

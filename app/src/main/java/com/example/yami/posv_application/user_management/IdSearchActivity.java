@@ -22,12 +22,14 @@ import com.android.volley.toolbox.Volley;
 
 import com.example.yami.posv_application.R;
 
+import com.example.yami.posv_application.activities.BaseActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.regex.Pattern;
 
-public class IdSearchActivity extends AppCompatActivity {
+public class IdSearchActivity extends BaseActivity {
 
     Spinner emailSpinner;
     @Override

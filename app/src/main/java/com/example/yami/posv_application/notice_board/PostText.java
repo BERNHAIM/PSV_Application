@@ -64,15 +64,15 @@ public class PostText extends AppCompatActivity {
         final TextView currentTime = (TextView) findViewById(R.id.date);
         final TextView contents = (TextView) findViewById(R.id.contents);
 
-        listView = (ListView)findViewById(R.id.commentList);
+        listView = (ListView) findViewById(R.id.commentList);
         commentList = new ArrayList<Comment>();
         adapter = new CommentListAdapter(this, commentList);
         listView.setAdapter(adapter);
 
-        final EditText commentText = (EditText)findViewById(R.id.comment);
-        btnWrite = (Button)findViewById(R.id.writeBtn);
-        btnUpdate = (Button)findViewById(R.id.updateBtn);
-        btnDelete = (Button)findViewById(R.id.deleteBtn);
+        final EditText commentText = (EditText) findViewById(R.id.comment);
+        btnWrite = (Button) findViewById(R.id.writeBtn);
+        btnUpdate = (Button) findViewById(R.id.updateBtn);
+        btnDelete = (Button) findViewById(R.id.deleteBtn);
 
         pref = getSharedPreferences("psvLoginSes", 0);
         final String p_num = intent.getStringExtra("p_num");
@@ -86,10 +86,52 @@ public class PostText extends AppCompatActivity {
         final String post_uid = userID.getText().toString();
 
         //유저 아이디가 같지 않으면 수정 버튼 보이지 않음
-        if(ses_uid.equals(post_uid)){
+        if (ses_uid.equals(post_uid)) {
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
         }
+
+        //댓글 불러오기
+        //4. 콜백 처리부분(volley 사용을 위한 ResponseListener 구현 부분)
+        final Response.Listener<String> responseListener2 = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
+                    JSONObject jsonObject = new JSONObject(response);
+                    //WritePostActivity에서 PostActivity로 넘어갈 때 받아오는 json 데이터가 없으므로 WritePostActivity에서도 json을 받아올 수 있게 해주어야함
+                    //List.php 웹페이지에서 response라는 변수명으로 JSON 배열을 만들었음..
+                    JSONArray jsonArray = jsonObject.getJSONArray("response");
+                    int count = 0;
+
+                    //JSON 배열 길이만큼 반복문을 실행
+                    while (count < jsonArray.length()) {
+                        //count는 배열의 인덱스를 의미
+                        JSONObject object = jsonArray.getJSONObject(count);
+
+                        String commentNum = object.optString("c_num", "no value");
+                        String postNum = object.optString("p_num", "no value");
+                        String userID = object.optString("userID", "no ID value");
+                        String date = object.optString("time", "no time value");
+                        String comment = object.optString("comment", "no comment value");
+
+                        //값들을 User클래스에 묶어줍니다
+                        Comment com = new Comment(commentNum, postNum, userID, comment, date);
+                        commentList.add(com);//리스트뷰에 값을 추가해줍니다
+                        count++;
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        };
+        CommentListRequest commentListRequest = new CommentListRequest(p_num, responseListener2);
+        RequestQueue queue = Volley.newRequestQueue(PostText.this);
+        queue.add(commentListRequest);
+
 
         //댓글 쓰기 버튼
         btnWrite.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +142,7 @@ public class PostText extends AppCompatActivity {
                 final String u_id = pref.getString("id", "");
 
                 //4. 콜백 처리부분(volley 사용을 위한 ResponseListener 구현 부분)
-                Response.Listener<String> responseListener = new Response.Listener<String>(){
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
 
                     //서버로부터 여기서 데이터를 받음
                     @Override
@@ -112,7 +154,7 @@ public class PostText extends AppCompatActivity {
                             boolean success = jsonResponse.getBoolean("success");
 
                             //회원 가입 성공시 success값이 true임
-                            if(success){
+                            if (success) {
 
                                 //알림상자를 만들어서 보여줌
                                 AlertDialog.Builder builder = new AlertDialog.Builder(PostText.this);
@@ -141,7 +183,7 @@ public class PostText extends AppCompatActivity {
 
                             }
                             //회원 가입 실패시 success값이 false임
-                            else{
+                            else {
                                 Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
 
                                 //알림상자를 만들어서 보여줌
@@ -153,7 +195,7 @@ public class PostText extends AppCompatActivity {
 
                             }
 
-                        }catch(JSONException e){
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
@@ -175,11 +217,11 @@ public class PostText extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final String com_num =  commentList.get(position).getCommentNum();
+                final String com_num = commentList.get(position).getCommentNum();
                 final String ses_uid = pref.getString("id", "null");
                 final String com_uid = commentList.get(position).getUserID();
 
-                if (ses_uid.equals(com_uid)){
+                if (ses_uid.equals(com_uid)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(PostText.this);
                     builder.setMessage("댓글을 삭제하시겠습니까?")
                             .setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -198,7 +240,7 @@ public class PostText extends AppCompatActivity {
                                                 boolean success = jsonResponse.getBoolean("success");
 
                                                 //게시글 등록 성공시 success값이 true임
-                                                if(success){
+                                                if (success) {
 
                                                     //알림상자를 만들어서 보여줌
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(PostText.this);
@@ -223,7 +265,7 @@ public class PostText extends AppCompatActivity {
 
                                                 }
                                                 //게시글 등록 실패시 success값이 false임
-                                                else{
+                                                else {
                                                     Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
 
                                                     //알림상자를 만들어서 보여줌
@@ -235,7 +277,7 @@ public class PostText extends AppCompatActivity {
 
                                                 }
 
-                                            }catch(JSONException e){
+                                            } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
                                         }
@@ -305,7 +347,7 @@ public class PostText extends AppCompatActivity {
                                             boolean success = jsonResponse.getBoolean("success");
 
                                             //게시글 등록 성공시 success값이 true임
-                                            if(success){
+                                            if (success) {
 
                                                 //알림상자를 만들어서 보여줌
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(PostText.this);
@@ -323,7 +365,7 @@ public class PostText extends AppCompatActivity {
 
                                             }
                                             //게시글 등록 실패시 success값이 false임
-                                            else{
+                                            else {
                                                 Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
 
                                                 //알림상자를 만들어서 보여줌
@@ -335,7 +377,7 @@ public class PostText extends AppCompatActivity {
 
                                             }
 
-                                        }catch(JSONException e){
+                                        } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                     }
@@ -357,47 +399,6 @@ public class PostText extends AppCompatActivity {
                         .show();
             }
         });
-
-        //댓글 불러오기
-        //4. 콜백 처리부분(volley 사용을 위한 ResponseListener 구현 부분)
-        final Response.Listener<String> responseListener2 = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
-                    JSONObject jsonObject = new JSONObject(response);
-                    //WritePostActivity에서 PostActivity로 넘어갈 때 받아오는 json 데이터가 없으므로 WritePostActivity에서도 json을 받아올 수 있게 해주어야함
-                    //List.php 웹페이지에서 response라는 변수명으로 JSON 배열을 만들었음..
-                    JSONArray jsonArray = jsonObject.getJSONArray("response");
-                    int count = 0;
-
-                    //JSON 배열 길이만큼 반복문을 실행
-                    while (count < jsonArray.length()) {
-                        //count는 배열의 인덱스를 의미
-                        JSONObject object = jsonArray.getJSONObject(count);
-
-                        String commentNum = object.optString("c_num", "no value");
-                        String postNum = object.optString("p_num", "no value");
-                        String userID = object.optString("userID", "no ID value");
-                        String date = object.optString("time", "no time value");
-                        String comment = object.optString("comment", "no comment value");
-
-                        //값들을 User클래스에 묶어줍니다
-                        Comment com = new Comment(commentNum, postNum, userID, comment, date);
-                        commentList.add(com);//리스트뷰에 값을 추가해줍니다
-                        count++;
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-        };
-            CommentListRequest commentListRequest = new CommentListRequest(p_num, responseListener2);
-            RequestQueue queue = Volley.newRequestQueue(PostText.this);
-            queue.add(commentListRequest);
     }
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {

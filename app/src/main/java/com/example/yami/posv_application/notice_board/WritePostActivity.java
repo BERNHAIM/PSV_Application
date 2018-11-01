@@ -8,15 +8,19 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.yami.posv_application.R;
+
+import com.example.yami.posv_application.activities.BaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,10 +33,12 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 
-public class WritePostActivity extends AppCompatActivity {
+public class WritePostActivity extends BaseActivity {
 
     SharedPreferences spref;
     Button regBtn;
+    String forumList[] = {"지역", "서울", "경기", "인천", "광주", "부산"};
+    Spinner forumSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,11 @@ public class WritePostActivity extends AppCompatActivity {
 
         spref = getSharedPreferences("psvLoginSes", 0);
 
+        forumSpinner = (Spinner)findViewById(R.id.forumSpinner);
+        ArrayAdapter emailAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, forumList);
+        emailAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        forumSpinner.setAdapter(emailAdapter);
+
         regBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -59,8 +70,7 @@ public class WritePostActivity extends AppCompatActivity {
                 String timestamp = DateFormat.getDateTimeInstance().format(new Date());     //게시시간
                 boolean check = checkBox.isChecked();                            //체크다 이년아
                 String anony = "익명";
-
-
+                final String area = forumSpinner.getSelectedItem().toString();
 
                 //4. 콜백 처리부분(volley 사용을 위한 ResponseListener 구현 부분)
                 Response.Listener<String> responseListener = new Response.Listener<String>(){
@@ -88,6 +98,7 @@ public class WritePostActivity extends AppCompatActivity {
                                                 Intent intent = new Intent(WritePostActivity.this, PostActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                 WritePostActivity.this.startActivity(intent);
+                                                intent.putExtra("area", area);
 
                                                 new WritePostActivity.BackgroundTask().execute();
                                             }
@@ -118,7 +129,7 @@ public class WritePostActivity extends AppCompatActivity {
 
                 //volley 사용법
                 //1. RequestObject를 생성한다. 이때 서버로부터 데이터를 받을 responseListener를 반드시 넘겨준다.
-                WritePostRequest writePostRequest = new WritePostRequest(postName, contents, userID, anony, responseListener, check);
+                WritePostRequest writePostRequest = new WritePostRequest(postName, contents, area, userID, anony, responseListener, check);
                 //2. RequestQueue를 생성한다.
                 RequestQueue queue = Volley.newRequestQueue(WritePostActivity.this);
                 //3. RequestQueue에 RequestObject를 넘겨준다.

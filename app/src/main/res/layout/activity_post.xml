@@ -11,28 +11,43 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
+            android:background="@color/board_color">
 
                 <EditText
-                    android:layout_width="match_parent"
+                    android:layout_width="270dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/searchPost"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:hint="글 검색"/>
+                    android:hint="글 검색"
+                    android:textSize="20sp"
+                    android:theme="@style/postEditTheme"/>
+
+                <Spinner
+                    android:id="@+id/forumSpinner"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="@dimen/default_font_size"
+                    android:textColor="@color/darkblue"
+                    android:gravity="center"
+                    />
 
         </android.support.v7.widget.Toolbar>
 
         <!--게시판 메인-->
         <ListView
             android:id="@+id/listView"
+            android:background="@drawable/board_border"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
+            android:padding="7dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="60dp"
             android:divider="#d1d1d1"
-            android:dividerHeight="10dp"
+            android:dividerHeight="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,6 +61,10 @@
             android:layout_marginBottom="1dp"
             android:layout_marginRight="7dp"
             android:text="글쓰기"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#2b2b2b"
+            android:background="@drawable/rounded_yellow"
             app:layout_constraintBottom_toBottomOf="@+id/listView"
             app:layout_constraintEnd_toEndOf="parent" />
 

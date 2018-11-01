@@ -1,23 +1,36 @@
 package com.example.yami.posv_application.notice_board;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.yami.posv_application.activities.MainActivity;
 import com.example.yami.posv_application.R;
+import com.example.yami.posv_application.user_management.LoginActivity;
 import com.example.yami.posv_application.user_management.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +43,8 @@ public class PostActivity extends AppCompatActivity {
     Button btnWrite;
     String userID, postName, currentTime, contents, p_num;
     SessionManager session;
+    Spinner forumSpinner;
+    String forumList[] = {"지역", "전체 지역", "서울", "경기", "인천", "광주", "부산"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +63,11 @@ public class PostActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
         btnWrite = (Button)findViewById(R.id.btnWrite);
         EditText search = (EditText)findViewById(R.id.searchPost);
+
+        forumSpinner = (Spinner)findViewById(R.id.forumSpinner);
+        ArrayAdapter emailAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, forumList);
+        emailAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        forumSpinner.setAdapter(emailAdapter);
 
         try{
             //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
@@ -106,6 +126,37 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        forumSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if(forumList[i].equals("전체 지역")){
+                    new MainForum().execute();
+                    Toast.makeText(getApplicationContext(), "전체 지역", Toast.LENGTH_SHORT).show();
+                } else if(forumList[i].equals("서울")){
+                    new SeoulForum().execute();
+                    Toast.makeText(getApplicationContext(), "서울 지역", Toast.LENGTH_SHORT).show();
+                } else if(forumList[i].equals("경기")){
+                    new GyeonggiForum().execute();
+                    Toast.makeText(getApplicationContext(), "경기 지역", Toast.LENGTH_SHORT).show();
+                } else if(forumList[i].equals("인천")){
+                    new IncheonForum().execute();
+                    Toast.makeText(getApplicationContext(), "인천 지역", Toast.LENGTH_SHORT).show();
+                } else if(forumList[i].equals("광주")){
+                    new GwangjuForum().execute();
+                    Toast.makeText(getApplicationContext(), "광주 지역", Toast.LENGTH_SHORT).show();
+                } else if(forumList[i].equals("부산")){
+                    new BusanForum().execute();
+                    Toast.makeText(getApplicationContext(), "부산 지역", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         //글 검색
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -137,5 +188,372 @@ public class PostActivity extends AppCompatActivity {
             }
         }
         adapter.notifyDataSetChanged();//어댑터에 값일 바뀐것을 알려줌
+    }
+
+    // 스피너 선택시 불러올 게시글
+    class MainForum extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://pj9087.dothome.co.kr/GetForum.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Intent intent = new Intent(PostActivity.this, PostActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+            PostActivity.this.startActivity(intent);//Activity로 넘어감
+        }
+    }
+
+    class SeoulForum extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://pj9087.dothome.co.kr/GetSeoulForum.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Intent intent = new Intent(PostActivity.this, PostActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+            PostActivity.this.startActivity(intent);//Activity로 넘어감
+        }
+    }
+
+    class GyeonggiForum extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://pj9087.dothome.co.kr/GetGyenggiForum.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Intent intent = new Intent(PostActivity.this, PostActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+            PostActivity.this.startActivity(intent);//Activity로 넘어감
+        }
+    }
+
+    class IncheonForum extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://pj9087.dothome.co.kr/GetIncheonForum.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Intent intent = new Intent(PostActivity.this, PostActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+            PostActivity.this.startActivity(intent);//Activity로 넘어감
+        }
+    }
+
+    class GwangjuForum extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://pj9087.dothome.co.kr/GetGwangjuForum.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Intent intent = new Intent(PostActivity.this, PostActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+            PostActivity.this.startActivity(intent);//Activity로 넘어감
+        }
+    }
+
+    class BusanForum extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://pj9087.dothome.co.kr/GetBusanForum.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Intent intent = new Intent(PostActivity.this, PostActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+            PostActivity.this.startActivity(intent);//Activity로 넘어감
+        }
     }
 }
