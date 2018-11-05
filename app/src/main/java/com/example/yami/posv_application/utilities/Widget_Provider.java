@@ -3,15 +3,12 @@ package com.example.yami.posv_application.utilities;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.example.yami.posv_application.R;
-import com.example.yami.posv_application.activities.SimpleActivity;
+import com.example.yami.posv_application.activities.MainActivity;
 
 public class Widget_Provider extends AppWidgetProvider {
     @Override
@@ -28,7 +25,7 @@ public class Widget_Provider extends AppWidgetProvider {
     private PendingIntent buildActivityIntent(Context context){
 
         Intent intent = new Intent("yami.posv_application.widget.ACTION_CALL_ACTIVITY")
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                .setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);
 
         return pi;

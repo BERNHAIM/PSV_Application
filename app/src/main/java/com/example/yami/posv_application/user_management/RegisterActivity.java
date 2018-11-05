@@ -113,7 +113,7 @@ public class RegisterActivity extends BaseActivity {
                 if (userID.length() < 5) {
                     if (userID.length() == 0)
                         Toast.makeText(getApplicationContext(), "아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), "6자 이상의 아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "5자 이상의 아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
 
                     //비밀번호 입력을 최소 5자 초과로 받기
                 } else if (userPassword.length() < 5) {
@@ -192,8 +192,8 @@ public class RegisterActivity extends BaseActivity {
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 //3. RequestQueue에 RequestObject를 넘겨준다.
 
-                //아이디를 6자이상, 비밀번호를 8자 이상, 이름을 2글자 이상, 이메일을 6자 이상으로 받기
-                if (userID.length() >= 6 && userPassword.length() >= 8 && userName.length() >= 2 && userEmail.length() >= 6)
+                //아이디를 5자이상, 비밀번호를 8자 이상, 이름을 2글자 이상, 이메일을 5자 이상으로 받기
+                if (userID.length() >= 5 && userPassword.length() >= 8 && userName.length() >= 2 && userEmail.length() >= 5)
                     queue.add(registerRequest);
             }
         });

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
-    android:padding="30dp"
+    android:padding="20dp"
     android:background="@drawable/board_border"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.yami.posv_application.notice_board.WritePostActivity">
@@ -18,16 +18,20 @@
         android:id="@+id/l1"
         >
         <EditText
+            android:background="@drawable/xml_border"
             android:id="@+id/postNameText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="제목"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:hint=" 제목"
+            android:textSize="20sp"
             />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@+id/l1"
         app:layout_constraintRight_toRightOf="parent">
 
@@ -36,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="180dp"
             android:text="익명"
+            android:textSize="15sp"
             android:id="@+id/check1"/>
 
     </LinearLayout>
@@ -44,6 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/xml_border"
+        android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@+id/l1"
         app:layout_constraintRight_toRightOf="parent">
 
@@ -79,6 +85,7 @@
             android:layout_height="250dp"
             android:layout_marginTop="30dp"
             android:hint="내용"
+            android:textSize="20sp"
             android:layout_gravity="top"
             />
     </LinearLayout>
@@ -96,12 +103,17 @@
             android:layout_height="wrap_content"
             android:text="등록"
             android:id="@+id/btnReg"
+            android:textSize="20sp"
+            android:background="@color/board_color"
             />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text="취소"
+            android:textSize="20sp"
+            android:background="@color/board_color"
             android:layout_gravity="center_vertical"
             android:id="@+id/btnCancel" />
     </LinearLayout>

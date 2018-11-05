@@ -67,16 +67,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="수정"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_marginLeft="100dp"
             android:id="@+id/btnUpdate"
+            android:background="@drawable/rounded_yellow"
             />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="취소"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:id="@+id/btnCancel"
+            android:background="@drawable/rounded_yellow"
             />
     </LinearLayout>
 

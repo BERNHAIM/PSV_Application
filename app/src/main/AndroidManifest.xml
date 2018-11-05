@@ -54,8 +54,9 @@
                 android:resource="@xml/widget_provider"/>
         </receiver>
 
+
         <activity
-            android:name=".activities.widgetActivity">
+            android:name=".activities.sendSMSActivity">
             <intent-filter>
                 <action android:name="yami.posv_application.widget.ACTION_CALL_ACTIVITY"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -63,13 +64,12 @@
         </activity>
 
         <activity
-            android:name=".activities.SimpleActivity">
+            android:name=".activities.widget_NumList">
             <intent-filter>
                 <action android:name="yami.posv_application.widget.SETTING"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-
 
 
         <meta-data

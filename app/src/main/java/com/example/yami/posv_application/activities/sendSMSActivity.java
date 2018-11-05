@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class widgetActivity extends BaseActivity{
+public class sendSMSActivity extends BaseActivity{
 
     EditText textPhoneNo;
 
@@ -30,7 +30,6 @@ public class widgetActivity extends BaseActivity{
 
         ArrayList<String> smslist = new ArrayList<String>();
 
-        textPhoneNo = (EditText) findViewById(R.id.editTextPhoneNo);
 
         //입력한 값을 가져와 변수에 담는다
         //String phoneNo = textPhoneNo.getText().toString();
@@ -40,7 +39,7 @@ public class widgetActivity extends BaseActivity{
         // String sms = textSMS.getText().toString();
 
         try {
-            fis = openFileInput("internal.txt");
+            fis = openFileInput("number.list");
 
             SmsManager smsManager = SmsManager.getDefault();
 
