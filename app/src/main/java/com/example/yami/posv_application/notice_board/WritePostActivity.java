@@ -40,6 +40,14 @@ public class WritePostActivity extends BaseActivity {
     String forumList[] = {"지역", "서울", "경기", "인천", "광주", "부산"};
     Spinner forumSpinner;
 
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), PostActivity.class);
+        startActivity(intent);
+
+        finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

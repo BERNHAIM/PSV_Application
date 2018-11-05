@@ -4,8 +4,11 @@ package com.example.yami.posv_application.activities;
 // TODO 그리고 위젯 기능 
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +29,7 @@ import android.widget.Toast;
 import com.example.yami.posv_application.BackPressHandler;
 import com.example.yami.posv_application.R;
 import com.example.yami.posv_application.user_management.LoginActivity;
+import com.example.yami.posv_application.utilities.lbsService;
 
 import org.w3c.dom.Text;
 
@@ -103,13 +107,16 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
     /**
      * LBS 메뉴
      **/
+    private lbsService mService;
+    private boolean isBind;
+
     public void btn_LBS_menu(View v) {
         Intent intent = new Intent(getApplicationContext(), LBS_Activity.class);
         startActivity(intent);
+
 
         finish();
 

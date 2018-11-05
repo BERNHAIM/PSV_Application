@@ -8,13 +8,17 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
@@ -39,11 +43,16 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.yami.posv_application.BackPressHandler;
 import com.example.yami.posv_application.R;
+import com.example.yami.posv_application.utilities.LoadingActivity;
+import com.example.yami.posv_application.utilities.lbsService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -107,8 +116,6 @@ public class LBS_Activity extends BaseActivity
             .setInterval(UPDATE_INTERVAL_MS)
             .setFastestInterval(FASTEST_UPDATE_INTERVAL_MS);
 
-
-
     public void onBackPressed() {
         //super.onBackPressed();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -126,6 +133,9 @@ public class LBS_Activity extends BaseActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.lbs_map);
+
+        Intent intent = new Intent(this, LoadingActivity.class);
+        startActivity(intent);
 
         btn_back = (Button)findViewById(R.id.back3);
         btn_back.setOnClickListener(new Button.OnClickListener(){
@@ -151,8 +161,8 @@ public class LBS_Activity extends BaseActivity
 
         mapFragment.getMapAsync(this);
 
-    }
 
+    }
 
 
     @Override

@@ -40,11 +40,13 @@ public class PostActivity extends AppCompatActivity {
     private PostListAdapter adapter;
     private List<Post> postList;
     private List<Post> saveList;
-    Button btnWrite;
+    Button btnWrite, btnLogout;
     String userID, postName, currentTime, contents, p_num;
     SessionManager session;
     Spinner forumSpinner;
     String forumList[] = {"지역", "전체 지역", "서울", "경기", "인천", "광주", "부산"};
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class PostActivity extends AppCompatActivity {
         ArrayAdapter emailAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, forumList);
         emailAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         forumSpinner.setAdapter(emailAdapter);
+
 
         try{
             //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
@@ -170,13 +173,24 @@ public class PostActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        btnLogout = (Button) findViewById(R.id.btnLogout) ;
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                session.logoutUser();
+                finish();
+            }
+        });
     }
+
 
     public void onBackPressed() {
         //super.onBackPressed();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
-        session.logoutUser();
+
         finish();
     }
 

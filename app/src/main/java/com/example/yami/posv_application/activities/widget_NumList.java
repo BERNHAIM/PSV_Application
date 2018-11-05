@@ -1,6 +1,8 @@
 package com.example.yami.posv_application.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -151,6 +153,12 @@ public class widget_NumList extends BaseActivity {
         }
     }
 
+    public void onBackPressed() {
+        //super.onBackPressed();
+        ActivityCompat.finishAffinity(this);
+        System.runFinalizersOnExit(true);
+        System.exit(0);
+    }
 }
 
 

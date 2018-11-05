@@ -71,16 +71,19 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".utilities.LoadingActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAlcAN3TQVI9tO3i8QL011tZ8rK7oM43ZI" />
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyApCczYznhpTfjk8FvGvStkXZ-4R8MRTf0" />
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
 
-
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+        <service android:name=".utilities.lbsService"></service>
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

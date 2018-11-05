@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.yami.posv_application.R;
+import com.example.yami.posv_application.activities.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +52,7 @@ public class PostText extends AppCompatActivity {
     SharedPreferences pref;
     //String commentNum, postNum, c_userID, comment, time;
     ListView listView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
