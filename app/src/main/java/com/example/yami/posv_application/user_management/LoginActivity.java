@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.yami.posv_application.activities.AdminActivity;
 import com.example.yami.posv_application.activities.MainActivity;
 import com.example.yami.posv_application.R;
 import com.example.yami.posv_application.notice_board.PostActivity;
@@ -101,17 +102,23 @@ public class LoginActivity extends BaseActivity {
                                 String userPassword = jsonResponse.getString("u_password");
                                 String userName = jsonResponse.getString("u_name");
 
-                                session.createLoginSession(userName, userID);
+                                if(userID != "admin"){
+                                    session.createLoginSession(userName, userID);
+                                    Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    LoginActivity.this.startActivity(intent);
+                                }else {
+                                    session.createLoginSession(userName, userID);
 
-                                //로그인에 성공했으므로 MainActivity로 넘어감
-                                Intent intent = new Intent(LoginActivity.this, PostActivity.class);
-                                intent.putExtra("u_id", userID);
-                                intent.putExtra("u_password", userPassword);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                LoginActivity.this.startActivity(intent);
-                                new BackgroundTask().execute();
-
+                                    //로그인에 성공했으므로 MainActivity로 넘어감
+                                    Intent intent = new Intent(LoginActivity.this, PostActivity.class);
+                                    intent.putExtra("u_id", userID);
+                                    intent.putExtra("u_password", userPassword);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    LoginActivity.this.startActivity(intent);
+                                    new BackgroundTask().execute();
+                                }
                             } else {//로그인 실패시
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                 builder.setMessage("Login failed")

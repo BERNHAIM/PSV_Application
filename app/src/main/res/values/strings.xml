@@ -21,5 +21,6 @@
     <string name="FIND_title">우리 동네의 상담센터를 알고 싶어요!</string>
     <string name="FIND_description">지역명 : 서울/인천</string>
 
-
+    <string name="action_settings">Settings</string>
+    
 </resources>

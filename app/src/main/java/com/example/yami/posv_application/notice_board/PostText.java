@@ -26,7 +26,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.yami.posv_application.R;
-import com.example.yami.posv_application.activities.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,7 +51,6 @@ public class PostText extends AppCompatActivity {
     SharedPreferences pref;
     //String commentNum, postNum, c_userID, comment, time;
     ListView listView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +87,9 @@ public class PostText extends AppCompatActivity {
 
         //유저 아이디가 같지 않으면 수정 버튼 보이지 않음
         if (ses_uid.equals(post_uid)) {
+            btnUpdate.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
+        } else if (ses_uid.equals("admin")){
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
         }

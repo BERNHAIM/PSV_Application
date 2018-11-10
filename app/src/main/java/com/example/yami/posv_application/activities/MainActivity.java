@@ -1,8 +1,5 @@
 package com.example.yami.posv_application.activities;
 
-// TODO 2018.10.28 남은 작업은 익명게시판 디자인과 상담사연결 디자인(크게 그리드레이아웃:세로 2분할)
-// TODO 그리고 위젯 기능 
-
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
