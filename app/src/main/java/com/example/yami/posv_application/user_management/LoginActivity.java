@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,11 +14,11 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.yami.posv_application.activities.AdminActivity;
+import com.example.yami.posv_application.admin.AdminActivity;
+import com.example.yami.posv_application.activities.BaseActivity;
 import com.example.yami.posv_application.activities.MainActivity;
 import com.example.yami.posv_application.R;
 import com.example.yami.posv_application.notice_board.PostActivity;
-import com.example.yami.posv_application.activities.BaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 public class LoginActivity extends BaseActivity {
@@ -47,6 +46,7 @@ public class LoginActivity extends BaseActivity {
         final TextView registerbtn = (TextView) findViewById(R.id.registerbtn);
         final TextView idSearchBtn = (TextView) findViewById(R.id.idSearchBtn);
         final TextView pwSearchBtn = (TextView) findViewById(R.id.pwSearchBtn);
+        final TextView guest = (TextView) findViewById(R.id.guest);
 
         //입력받는 값을 영어,숫자로 제한하기 위한 함수
         filterAlphaNum = new InputFilter() {
@@ -60,7 +60,6 @@ public class LoginActivity extends BaseActivity {
             }
         };
 
-
         final SessionManager session;
         session = new SessionManager(getApplicationContext());
 
@@ -70,6 +69,24 @@ public class LoginActivity extends BaseActivity {
                 Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
                 registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_CLEAR_TOP);
                 LoginActivity.this.startActivity(registerIntent);
+            }
+        });
+
+        //게스트 로그인
+        guest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    String postList = new BackgroundTask().execute().get();
+                    Intent registerIntent = new Intent(LoginActivity.this, PostActivity.class);
+                    registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_CLEAR_TOP);
+                    registerIntent.putExtra("postList", postList);
+                    LoginActivity.this.startActivity(registerIntent);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -90,6 +107,7 @@ public class LoginActivity extends BaseActivity {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");
+                            final String aynResult = new BackgroundTask().execute().get();
 
                             Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
 
@@ -98,10 +116,12 @@ public class LoginActivity extends BaseActivity {
 
                                 //Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
 
+                                String userNum = jsonResponse.getString("u_num");
                                 String userID = jsonResponse.getString("u_id");
                                 String userPassword = jsonResponse.getString("u_password");
                                 String userName = jsonResponse.getString("u_name");
 
+                                session.createLoginSession(userName, userID);
                                 if(userID != "admin"){
                                     session.createLoginSession(userName, userID);
                                     Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
@@ -128,6 +148,10 @@ public class LoginActivity extends BaseActivity {
                             }
 
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
                     }
@@ -211,11 +235,11 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(LoginActivity.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            LoginActivity.this.startActivity(intent);//Activity로 넘어감
+//            Intent intent = new Intent(LoginActivity.this, PostActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+//            LoginActivity.this.startActivity(intent);//Activity로 넘어감
         }
     }
 

@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.yami.posv_application.R;
+import com.example.yami.posv_application.user_management.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,8 +40,10 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class PostText extends AppCompatActivity {
 
@@ -51,6 +54,7 @@ public class PostText extends AppCompatActivity {
     SharedPreferences pref;
     //String commentNum, postNum, c_userID, comment, time;
     ListView listView;
+    SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,15 +88,57 @@ public class PostText extends AppCompatActivity {
 
         final String ses_uid = pref.getString("id", "null");
         final String post_uid = userID.getText().toString();
+        final String ses_unum = intent.getStringExtra("u_num");
+
+        session = new SessionManager(getApplicationContext());
+
+        //4. 콜백 처리부분(volley 사용을 위한 ResponseListener 구현 부분)
+        final Response.Listener<String> responseListener3 = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+
+                    Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+
+                    //서버에서 보내준 값이 true이면?
+                    if (success) {
+
+                        //Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+
+                        String postUserNum = jsonResponse.getString("u_num");
+
+                        if (ses_unum.equals(postUserNum)){
+                            btnUpdate.setVisibility(View.VISIBLE);
+                            btnDelete.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                }  catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        };
+        UserNumRequest userNumRequest = new UserNumRequest(p_num, responseListener3);
+        RequestQueue unQueue = Volley.newRequestQueue(PostText.this);
+        unQueue.add(userNumRequest);
+
+        HashMap<String, String> user = session.getUserDetails();
+
+        // name
+        String name = user.get(SessionManager.KEY_NAME);
 
         //유저 아이디가 같지 않으면 수정 버튼 보이지 않음
-        if (ses_uid.equals(post_uid)) {
+        if (ses_uid.equals("admin")){
             btnUpdate.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
-        } else if (ses_uid.equals("admin")){
-            btnUpdate.setVisibility(View.VISIBLE);
-            btnDelete.setVisibility(View.VISIBLE);
-        }
+        }//게스트 로그인일때 댓글쓰기 안보이게
+        else if(name == null)
+            btnWrite.setVisibility(View.GONE);
+
+        else btnWrite.setVisibility(View.VISIBLE);
 
         //댓글 불러오기
         //4. 콜백 처리부분(volley 사용을 위한 ResponseListener 구현 부분)
@@ -175,6 +221,7 @@ public class PostText extends AppCompatActivity {
                                                 intent.putExtra("userID", userID.getText().toString());
                                                 intent.putExtra("date", currentTime.getText().toString());
                                                 intent.putExtra("contents", contents.getText().toString());
+                                                intent.putExtra("u_num", ses_unum);
 
                                                 startActivity(intent);
 
@@ -260,6 +307,8 @@ public class PostText extends AppCompatActivity {
                                                                     intent.putExtra("userID", userID.getText().toString());
                                                                     intent.putExtra("date", currentTime.getText().toString());
                                                                     intent.putExtra("contents", contents.getText().toString());
+                                                                    intent.putExtra("u_num", ses_unum);
+
                                                                     PostText.this.startActivity(intent);
                                                                 }
                                                             })
@@ -321,6 +370,7 @@ public class PostText extends AppCompatActivity {
                 intent.putExtra("userID", userID.getText().toString());
                 intent.putExtra("date", currentTime.getText().toString());
                 intent.putExtra("contents", contents.getText().toString());
+                intent.putExtra("u_num", ses_unum);
 //
                 startActivity(intent);
             }
@@ -360,7 +410,17 @@ public class PostText extends AppCompatActivity {
                                                             public void onClick(DialogInterface dialog, int which) {
                                                                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
                                                                 //그리고 첫화면으로 돌아감
-                                                                new BackgroundTask().execute();
+                                                                try {
+                                                                    String postList = new BackgroundTask().execute().get();
+                                                                    Intent intent = new Intent(PostText.this, PostActivity.class);
+                                                                    intent.putExtra("u_num", ses_unum);
+                                                                    intent.putExtra("postList", postList);
+                                                                    startActivity(intent);
+                                                                } catch (InterruptedException e) {
+                                                                    e.printStackTrace();
+                                                                } catch (ExecutionException e) {
+                                                                    e.printStackTrace();
+                                                                }//new BackgroundTask().execute();
                                                             }
                                                         })
                                                         .create()
@@ -457,11 +517,11 @@ public class PostText extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(PostText.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            PostText.this.startActivity(intent);//Activity로 넘어감
+//            Intent intent = new Intent(PostText.this, PostActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+//            PostText.this.startActivity(intent);//Activity로 넘어감
         }
 
     }

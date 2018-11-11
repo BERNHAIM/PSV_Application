@@ -29,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 public class PostUpdate extends AppCompatActivity {
 
@@ -54,6 +55,7 @@ public class PostUpdate extends AppCompatActivity {
         final String p_uid = intent.getStringExtra("userID");
         pref = getSharedPreferences("psvLoginSes", 0);
         final String s_uid = pref.getString("id", null);
+        final String u_num = intent.getStringExtra("u_num");
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -88,7 +90,17 @@ public class PostUpdate extends AppCompatActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
-                                                new BackgroundTask().execute();
+                                                try {
+                                                    String postList = new BackgroundTask().execute().get();
+                                                    Intent intent = new Intent(PostUpdate.this, PostActivity.class);
+                                                    intent.putExtra("u_num", u_num);
+                                                    intent.putExtra("postList", postList);
+                                                    startActivity(intent);
+                                                } catch (InterruptedException e) {
+                                                    e.printStackTrace();
+                                                } catch (ExecutionException e) {
+                                                    e.printStackTrace();
+                                                }//new BackgroundTask().execute();
                                             }
                                         })
                                         .create()
@@ -180,11 +192,11 @@ public class PostUpdate extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(PostUpdate.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            PostUpdate.this.startActivity(intent);//Activity로 넘어감
+//            Intent intent = new Intent(PostUpdate.this, PostActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+//            PostUpdate.this.startActivity(intent);//Activity로 넘어감
         }
 
     }

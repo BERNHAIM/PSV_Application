@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.example.yami.posv_application.activities.MainActivity;
 import com.example.yami.posv_application.R;
 import com.example.yami.posv_application.user_management.LoginActivity;
@@ -32,7 +36,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -40,13 +47,11 @@ public class PostActivity extends AppCompatActivity {
     private PostListAdapter adapter;
     private List<Post> postList;
     private List<Post> saveList;
-    Button btnWrite, btnLogout;
+    Button btnWrite;
     String userID, postName, currentTime, contents, p_num;
     SessionManager session;
     Spinner forumSpinner;
     String forumList[] = {"지역", "전체 지역", "서울", "경기", "인천", "광주", "부산"};
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,18 @@ public class PostActivity extends AppCompatActivity {
         emailAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         forumSpinner.setAdapter(emailAdapter);
 
+        final String userNum = intent.getStringExtra("u_num");
+        Button btnLogout = (Button)findViewById(R.id.btnLogout);
+        //Log.e("postun", userNum);
+
+        HashMap<String, String> user = session.getUserDetails();
+        // name
+        String name = user.get(SessionManager.KEY_NAME);
+        if(name == null) {
+            btnWrite.setVisibility(Button.GONE);
+            btnLogout.setVisibility(Button.GONE);
+        }
+        else btnWrite.setVisibility(Button.VISIBLE);
 
         try{
             //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
@@ -108,8 +125,17 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 Intent registerIntent = new Intent(PostActivity.this, WritePostActivity.class);
+                registerIntent.putExtra("u_num", userNum);
                 registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_NO_HISTORY);
                 PostActivity.this.startActivity(registerIntent);
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+               session.logoutUser();
             }
         });
 
@@ -124,6 +150,7 @@ public class PostActivity extends AppCompatActivity {
                 intent.putExtra("userID",postList.get(position).getUserID());
                 intent.putExtra("date",postList.get(position).getCurrentTime());
                 intent.putExtra("contents",postList.get(position).getContents());
+                intent.putExtra("u_num", userNum);
 
                 startActivity(intent);
             }
@@ -134,23 +161,89 @@ public class PostActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if(forumList[i].equals("전체 지역")){
-                    new MainForum().execute();
-                    Toast.makeText(getApplicationContext(), "전체 지역", Toast.LENGTH_SHORT).show();
+                    try {
+                        String postList = new MainForum().execute().get();
+                        Intent registerIntent = new Intent(PostActivity.this, PostActivity.class);
+                        registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_CLEAR_TOP);
+                        registerIntent.putExtra("postList", postList);
+                        registerIntent.putExtra("u_num", userNum);
+                        Toast.makeText(getApplicationContext(), "전체 지역", Toast.LENGTH_SHORT).show();
+                        PostActivity.this.startActivity(registerIntent);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 } else if(forumList[i].equals("서울")){
-                    new SeoulForum().execute();
-                    Toast.makeText(getApplicationContext(), "서울 지역", Toast.LENGTH_SHORT).show();
+                    try {
+                        String postList = new SeoulForum().execute().get();
+                        Intent registerIntent = new Intent(PostActivity.this, PostActivity.class);
+                        registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_CLEAR_TOP);
+                        registerIntent.putExtra("postList", postList);
+                        registerIntent.putExtra("u_num", userNum);
+                        Toast.makeText(getApplicationContext(), "서울 지역", Toast.LENGTH_SHORT).show();
+                        PostActivity.this.startActivity(registerIntent);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 } else if(forumList[i].equals("경기")){
-                    new GyeonggiForum().execute();
-                    Toast.makeText(getApplicationContext(), "경기 지역", Toast.LENGTH_SHORT).show();
+                    try {
+                        String postList = new GyeonggiForum().execute().get();
+                        Intent registerIntent = new Intent(PostActivity.this, PostActivity.class);
+                        registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_CLEAR_TOP);
+                        registerIntent.putExtra("postList", postList);
+                        registerIntent.putExtra("u_num", userNum);
+                        Toast.makeText(getApplicationContext(), "경기 지역", Toast.LENGTH_SHORT).show();
+                        PostActivity.this.startActivity(registerIntent);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 } else if(forumList[i].equals("인천")){
-                    new IncheonForum().execute();
-                    Toast.makeText(getApplicationContext(), "인천 지역", Toast.LENGTH_SHORT).show();
+                    try {
+                        String postList = new IncheonForum().execute().get();
+                        Intent registerIntent = new Intent(PostActivity.this, PostActivity.class);
+                        registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_CLEAR_TOP);
+                        registerIntent.putExtra("postList", postList);
+                        registerIntent.putExtra("u_num", userNum);
+                        Toast.makeText(getApplicationContext(), "인천 지역", Toast.LENGTH_SHORT).show();
+                        PostActivity.this.startActivity(registerIntent);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 } else if(forumList[i].equals("광주")){
-                    new GwangjuForum().execute();
-                    Toast.makeText(getApplicationContext(), "광주 지역", Toast.LENGTH_SHORT).show();
+                    try {
+                        String postList = new GwangjuForum().execute().get();
+                        Intent registerIntent = new Intent(PostActivity.this, PostActivity.class);
+                        registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_CLEAR_TOP);
+                        registerIntent.putExtra("postList", postList);
+                        registerIntent.putExtra("u_num", userNum);
+                        Toast.makeText(getApplicationContext(), "광주 지역", Toast.LENGTH_SHORT).show();
+                        PostActivity.this.startActivity(registerIntent);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 } else if(forumList[i].equals("부산")){
-                    new BusanForum().execute();
-                    Toast.makeText(getApplicationContext(), "부산 지역", Toast.LENGTH_SHORT).show();
+                    try {
+                        String postList = new BusanForum().execute().get();
+                        Intent registerIntent = new Intent(PostActivity.this, PostActivity.class);
+                        registerIntent.addFlags(registerIntent.FLAG_ACTIVITY_CLEAR_TOP);
+                        registerIntent.putExtra("postList", postList);
+                        registerIntent.putExtra("u_num", userNum);
+                        Toast.makeText(getApplicationContext(), "부산 지역", Toast.LENGTH_SHORT).show();
+                        PostActivity.this.startActivity(registerIntent);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -173,24 +266,12 @@ public class PostActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
-
-        btnLogout = (Button) findViewById(R.id.btnLogout) ;
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                session.logoutUser();
-                finish();
-            }
-        });
     }
-
 
     public void onBackPressed() {
         //super.onBackPressed();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
-
         finish();
     }
 
@@ -258,11 +339,7 @@ public class PostActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(PostActivity.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            PostActivity.this.startActivity(intent);//Activity로 넘어감
+//
         }
     }
 
@@ -319,11 +396,7 @@ public class PostActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(PostActivity.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            PostActivity.this.startActivity(intent);//Activity로 넘어감
+//
         }
     }
 
@@ -380,11 +453,7 @@ public class PostActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(PostActivity.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            PostActivity.this.startActivity(intent);//Activity로 넘어감
+
         }
     }
 
@@ -441,11 +510,7 @@ public class PostActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(PostActivity.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            PostActivity.this.startActivity(intent);//Activity로 넘어감
+
         }
     }
 
@@ -502,11 +567,7 @@ public class PostActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(PostActivity.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            PostActivity.this.startActivity(intent);//Activity로 넘어감
+
         }
     }
 
@@ -563,11 +624,7 @@ public class PostActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(PostActivity.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            PostActivity.this.startActivity(intent);//Activity로 넘어감
+
         }
     }
 }

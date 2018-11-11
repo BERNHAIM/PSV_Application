@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -51,6 +52,8 @@ import android.widget.Toast;
 
 import com.example.yami.posv_application.BackPressHandler;
 import com.example.yami.posv_application.R;
+import com.example.yami.posv_application.admin.AdminLBSActivity;
+import com.example.yami.posv_application.models.dataTest;
 import com.example.yami.posv_application.utilities.LoadingActivity;
 import com.example.yami.posv_application.utilities.lbsService;
 import com.google.android.gms.common.ConnectionResult;
@@ -72,12 +75,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 
 public class LBS_Activity extends BaseActivity
@@ -87,6 +95,8 @@ public class LBS_Activity extends BaseActivity
         LocationListener {
 
     private BackPressHandler backPressHandler;
+
+    String subject, location_x, location_y;
 
     Button btn_back;
 
@@ -271,20 +281,34 @@ public class LBS_Activity extends BaseActivity
          * x, y, title을 가져와 배열크기만큼 마커 생성
          * **/
 
-        String testcase = loadJSONFromAsset();
-
         try{
-            test = new JSONObject(testcase);
-            location = test.getJSONArray("location");
 
-            for(int i = 0; i < location.length(); i++) {
-                String subject = location.getJSONObject(i).getString("subject");
-                double x = location.getJSONObject(i).getDouble("x");
-                double y = location.getJSONObject(i).getDouble("y");
+            String result = new LBS_Activity.BackgroundTask().execute().get();
+            System.out.print("result : " + result);
 
+            Intent intent = new Intent(LBS_Activity.this, LBS_Activity.class);
+            intent.putExtra("dangerAreaList", result);
+
+            //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
+            JSONObject jsonObject = new JSONObject(intent.getStringExtra("dangerAreaList"));
+            //WritePostActivity에서 PostActivity로 넘어갈 때 받아오는 json 데이터가 없으므로 WritePostActivity에서도 json을 받아올 수 있게 해주어야함
+            //List.php 웹페이지에서 response라는 변수명으로 JSON 배열을 만들었음..
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            int count = 0;
+
+            //JSON 배열 길이만큼 반복문을 실행
+            while(count < jsonArray.length()){
+                //count는 배열의 인덱스를 의미
+                JSONObject object = jsonArray.getJSONObject(count);
+
+                subject = object.optString("subject", "no value");
+                location_x = object.optString("x", "no value");
+                location_y = object.optString("y", "no value");
+
+                //값들을 User클래스에 묶어줍니다
 
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(new LatLng(x,y)).title(subject);
+                markerOptions.position(new LatLng(Double.parseDouble(location_x),Double.parseDouble(location_y))).title(subject);
 
                 BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.marker);
                 Bitmap b=bitmapdraw.getBitmap();
@@ -294,7 +318,7 @@ public class LBS_Activity extends BaseActivity
 
                 mGoogleMap.addMarker(markerOptions);
 
-                LatLng markerPosition = new LatLng(x,y);
+                LatLng markerPosition = new LatLng(Double.parseDouble(location_x),Double.parseDouble(location_y));
 
                 CircleOptions circle1KM = new CircleOptions().center(markerPosition) //원점
                         .radius(1000)      //반지름 단위 : m
@@ -302,10 +326,15 @@ public class LBS_Activity extends BaseActivity
                         .fillColor(Color.parseColor("#40FF9999"));
 
                 mGoogleMap.addCircle(circle1KM);
+
+                count++;
             }
-        }catch (Exception e){
+
+
+        } catch(Exception e) {
             e.printStackTrace();
         }
+
 
         Log.d("STATUS","JSON파일 파싱 및 배치완료");
 
@@ -364,6 +393,66 @@ public class LBS_Activity extends BaseActivity
     }
 
 
+    class BackgroundTask extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://pj9087.dothome.co.kr/DangerArea.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+//            Intent intent = new Intent(LoginActivity.this, PostActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+//            LoginActivity.this.startActivity(intent);//Activity로 넘어감
+        }
+    }
     @Override
     public void onLocationChanged(Location location) {
 

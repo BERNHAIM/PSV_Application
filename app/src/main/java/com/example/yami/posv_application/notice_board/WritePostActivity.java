@@ -20,8 +20,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.yami.posv_application.R;
 
-import com.example.yami.posv_application.activities.BaseActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,21 +30,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
-public class WritePostActivity extends BaseActivity {
+public class WritePostActivity extends AppCompatActivity {
 
     SharedPreferences spref;
     Button regBtn;
     String forumList[] = {"지역", "서울", "경기", "인천", "광주", "부산"};
     Spinner forumSpinner;
-
-    public void onBackPressed() {
-        //super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), PostActivity.class);
-        startActivity(intent);
-
-        finish();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +57,9 @@ public class WritePostActivity extends BaseActivity {
         ArrayAdapter emailAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, forumList);
         emailAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         forumSpinner.setAdapter(emailAdapter);
+
+        Intent intent = getIntent();
+        final String userNum = intent.getStringExtra("u_num");
 
         regBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -91,6 +85,7 @@ public class WritePostActivity extends BaseActivity {
                             JSONObject jsonResponse = new JSONObject(response);
                             //그중 Key값이 "success"인 것을 가져온다.
                             boolean success = jsonResponse.getBoolean("success");
+                            final String postList = new BackgroundTask().execute().get();
 
                             //게시글 등록 성공시 success값이 true임
                             if(success){
@@ -104,11 +99,11 @@ public class WritePostActivity extends BaseActivity {
                                                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
                                                 //그리고 첫화면으로 돌아감
                                                 Intent intent = new Intent(WritePostActivity.this, PostActivity.class);
+                                                intent.putExtra("area", area);
+                                                intent.putExtra("u_num", userNum);
+                                                intent.putExtra("postList", postList);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                 WritePostActivity.this.startActivity(intent);
-                                                intent.putExtra("area", area);
-
-                                                new WritePostActivity.BackgroundTask().execute();
                                             }
                                         })
                                         .create()
@@ -130,6 +125,10 @@ public class WritePostActivity extends BaseActivity {
 
                         }catch(JSONException e){
                             e.printStackTrace();
+                        }catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
                         }
 
                     }
@@ -137,7 +136,7 @@ public class WritePostActivity extends BaseActivity {
 
                 //volley 사용법
                 //1. RequestObject를 생성한다. 이때 서버로부터 데이터를 받을 responseListener를 반드시 넘겨준다.
-                WritePostRequest writePostRequest = new WritePostRequest(postName, contents, area, userID, anony, responseListener, check);
+                WritePostRequest writePostRequest = new WritePostRequest(postName, contents, area, userID, anony, userNum, responseListener, check);
                 //2. RequestQueue를 생성한다.
                 RequestQueue queue = Volley.newRequestQueue(WritePostActivity.this);
                 //3. RequestQueue에 RequestObject를 넘겨준다.
@@ -149,7 +148,17 @@ public class WritePostActivity extends BaseActivity {
 
             @Override
             public void onClick(View arg0) {
-                new BackgroundTask().execute();
+                try {
+                    String postList = new BackgroundTask().execute().get();
+                    Intent intent = new Intent(WritePostActivity.this, PostActivity.class);
+                    intent.putExtra("u_num", userNum);
+                    intent.putExtra("postList", postList);
+                    startActivity(intent);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -207,14 +216,11 @@ public class WritePostActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(WritePostActivity.this, PostActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
-            WritePostActivity.this.startActivity(intent);//Activity로 넘어감
-
-
-
+//            Intent intent = new Intent(WritePostActivity.this, PostActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+//            WritePostActivity.this.startActivity(intent);//Activity로 넘어감
         }
 
     }

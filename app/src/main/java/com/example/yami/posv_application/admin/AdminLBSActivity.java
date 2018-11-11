@@ -1,6 +1,8 @@
-package com.example.yami.posv_application.activities;
+package com.example.yami.posv_application.admin;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,9 +17,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.yami.posv_application.R;
+import com.example.yami.posv_application.activities.BaseActivity;
+import com.example.yami.posv_application.activities.MainActivity;
+import com.example.yami.posv_application.activities.PopupActivity;
 import com.example.yami.posv_application.models.dataTest;
+import com.example.yami.posv_application.notice_board.Post;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class AdminLBSActivity extends BaseActivity
@@ -27,6 +44,10 @@ public class AdminLBSActivity extends BaseActivity
     private EditText txtData3;
     private Button btnDataAdd;
     private ListView lvTest;
+
+    String subject, location_x, location_y;
+    private List<dangerArea> dangerAreaList;
+    private List<dangerArea> saveList;
 
     //만든 커스텀 아답터
     private CusromAdapter adapter;
@@ -40,6 +61,8 @@ public class AdminLBSActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_lbs);
+
+        Intent intent = getIntent();
 
         this.txtData1 = (EditText)findViewById(R.id.txtData1);
         this.txtData2 = (EditText)findViewById(R.id.txtData2);
@@ -61,15 +84,54 @@ public class AdminLBSActivity extends BaseActivity
         adapter = new CusromAdapter(this, 0, listReturn );
         this.lvTest.setAdapter(adapter);
 
-        this.listReturn.add(new dataTest(0, "a", "b", "c"));
-        this.listReturn.add(new dataTest(1, "a1", "b1", "c1"));
-        this.listReturn.add(new dataTest(2, "a2", "b2", "c2"));
-        this.listReturn.add(new dataTest(3, "a3", "b3", "c3"));
-        this.listReturn.add(new dataTest(4, "a4", "b4", "c5"));
-        this.listReturn.add(new dataTest(5, "a5", "b5", "c5"));
-        this.listReturn.add(new dataTest(6, "a6", "b6", "c6"));
-        this.listReturn.add(new dataTest(7, "a7", "b7", "c7"));
-        this.adapter.notifyDataSetChanged();
+        try{
+            String result = new BackgroundTask().execute().get();
+            System.out.print("result : " + result);
+
+            intent.putExtra("dangerAreaList", result);
+
+        } catch (InterruptedException e ){
+            e.printStackTrace();
+        } catch(ExecutionException e){
+            e.printStackTrace();
+        }
+
+
+        try{
+
+            //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
+            JSONObject jsonObject = new JSONObject(intent.getStringExtra("dangerAreaList"));
+            //WritePostActivity에서 PostActivity로 넘어갈 때 받아오는 json 데이터가 없으므로 WritePostActivity에서도 json을 받아올 수 있게 해주어야함
+            //List.php 웹페이지에서 response라는 변수명으로 JSON 배열을 만들었음..
+            JSONArray jsonArray = jsonObject.getJSONArray("response");
+            int count = 0;
+
+            //JSON 배열 길이만큼 반복문을 실행
+            while(count < jsonArray.length()){
+                //count는 배열의 인덱스를 의미
+                JSONObject object = jsonArray.getJSONObject(count);
+
+                subject = object.optString("subject", "no value");
+                location_x = object.optString("x", "no value");
+                location_y = object.optString("y", "no value");
+
+                //값들을 User클래스에 묶어줍니다
+
+                this.listReturn.add(new dataTest(count, subject, location_x, location_y));
+                count++;
+            }
+
+            this.adapter.notifyDataSetChanged();
+
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
+
+
+
     }
 
     @Override
@@ -179,4 +241,66 @@ public class AdminLBSActivity extends BaseActivity
     {
         this.adapter.remove(this.listReturn.get(nPosition));
     }
+
+    class BackgroundTask extends AsyncTask<Void, Void, String> {
+        String target;
+
+        @Override
+        protected void onPreExecute() {
+            //List.php은 파싱으로 가져올 웹페이지
+            target = "http://pj9087.dothome.co.kr/DangerArea.php";
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            try {
+                URL url = new URL(target);//URL 객체 생성
+
+                //URL을 이용해서 웹페이지에 연결하는 부분
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                //바이트단위 입력스트림 생성 소스는 httpURLConnection
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                //웹페이지 출력물을 버퍼로 받음 버퍼로 하면 속도가 더 빨라짐
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                //문자열 처리를 더 빠르게 하기 위해 StringBuilder클래스를 사용함
+                StringBuilder stringBuilder = new StringBuilder();
+
+                //한줄씩 읽어서 stringBuilder에 저장함
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");//stringBuilder에 넣어줌
+                }
+
+                //사용했던 것도 다 닫아줌
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+                return stringBuilder.toString().trim();//trim은 앞뒤의 공백을 제거함
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+//            Intent intent = new Intent(LoginActivity.this, PostActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
+//            LoginActivity.this.startActivity(intent);//Activity로 넘어감
+        }
+    }
 }
+

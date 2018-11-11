@@ -1,14 +1,12 @@
-package com.example.yami.posv_application.activities;
+package com.example.yami.posv_application.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.yami.posv_application.R;
-import com.example.yami.posv_application.user_management.LoginActivity;
-import com.example.yami.posv_application.user_management.RegisterActivity;
+import com.example.yami.posv_application.activities.BaseActivity;
 
 public class AdminActivity extends BaseActivity {
     @Override
