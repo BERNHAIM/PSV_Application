@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,10 +17,10 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.yami.posv_application.admin.AdminActivity;
 import com.example.yami.posv_application.activities.BaseActivity;
 import com.example.yami.posv_application.activities.MainActivity;
 import com.example.yami.posv_application.R;
+import com.example.yami.posv_application.admin.AdminActivity;
 import com.example.yami.posv_application.notice_board.PostActivity;
 
 import org.json.JSONException;
@@ -116,28 +119,35 @@ public class LoginActivity extends BaseActivity {
 
                                 //Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
 
+
                                 String userNum = jsonResponse.getString("u_num");
                                 String userID = jsonResponse.getString("u_id");
                                 String userPassword = jsonResponse.getString("u_password");
                                 String userName = jsonResponse.getString("u_name");
 
-                                session.createLoginSession(userName, userID);
-                                if(userID != "admin"){
+                                if(userID.equals("admin")){
                                     session.createLoginSession(userName, userID);
-                                    Intent intent = new Intent(LoginActivity.this, AdminActivity.class);
+                                    Log.d("admin?","YES!");
+                                    Intent intent = new Intent(com.example.yami.posv_application.user_management.LoginActivity.this, AdminActivity.class);
+                                    intent.putExtra("u_id", userID);
+                                    intent.putExtra("u_password", userPassword);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    LoginActivity.this.startActivity(intent);
-                                }else {
+                                    com.example.yami.posv_application.user_management.LoginActivity.this.startActivity(intent);
+                                } else {
                                     session.createLoginSession(userName, userID);
 
                                     //로그인에 성공했으므로 MainActivity로 넘어감
                                     Intent intent = new Intent(LoginActivity.this, PostActivity.class);
                                     intent.putExtra("u_id", userID);
                                     intent.putExtra("u_password", userPassword);
+                                    intent.putExtra("u_num", userNum);
+                                    intent.putExtra("postList", aynResult);
+                                    Log.e("un = ", userNum);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     LoginActivity.this.startActivity(intent);
-                                    new BackgroundTask().execute();
+                                    //new BackgroundTask().execute();
                                 }
                             } else {//로그인 실패시
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);

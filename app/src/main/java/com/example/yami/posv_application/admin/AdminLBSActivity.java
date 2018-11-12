@@ -105,7 +105,7 @@ public class AdminLBSActivity extends BaseActivity
                 //DB로 보내는 변수
                 postSubject = txtData1.getText().toString();
                 postLocationX = txtData2.getText().toString();
-                getPostLocationY = txtData2.getText().toString();
+                getPostLocationY = txtData3.getText().toString();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
 
@@ -118,17 +118,11 @@ public class AdminLBSActivity extends BaseActivity
                             //그중 Key값이 "success"인 것을 가져온다.
                             boolean success = jsonResponse.getBoolean("success");
 
-                            //회원 가입 성공시 success값이 true임
+
                             if (success) {
 
                                 Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
 
-                                //알림상자를 만들어서 보여줌
-                                AlertDialog.Builder builder = new AlertDialog.Builder(AdminLBSActivity.this);
-                                builder.setMessage("위험지역 등록 완료")
-                                        .setPositiveButton("ok", null)
-                                        .create()
-                                        .show();
 
                                 //그리고 첫화면으로 돌아감
                                 Intent intent = new Intent(AdminLBSActivity.this, AdminLBSActivity.class);
@@ -439,6 +433,14 @@ public class AdminLBSActivity extends BaseActivity
 //            intent.putExtra("postList", result);//파싱한 값을 넘겨줌
 //            LoginActivity.this.startActivity(intent);//Activity로 넘어감
         }
+    }
+
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+
+        finish();
     }
 }
 

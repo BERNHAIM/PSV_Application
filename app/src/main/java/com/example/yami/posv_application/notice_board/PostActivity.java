@@ -270,7 +270,7 @@ public class PostActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         //super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -627,4 +627,6 @@ public class PostActivity extends AppCompatActivity {
 
         }
     }
+
+
 }

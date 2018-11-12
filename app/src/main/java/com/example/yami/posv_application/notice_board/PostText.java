@@ -92,6 +92,11 @@ public class PostText extends AppCompatActivity {
 
         session = new SessionManager(getApplicationContext());
 
+        if(ses_uid.equals(post_uid)){
+            btnUpdate.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
+        }
+
         //4. 콜백 처리부분(volley 사용을 위한 ResponseListener 구현 부분)
         final Response.Listener<String> responseListener3 = new Response.Listener<String>() {
             @Override
