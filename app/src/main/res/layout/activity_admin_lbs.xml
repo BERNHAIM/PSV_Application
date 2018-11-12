@@ -5,36 +5,59 @@
     android:orientation="vertical"
     tools:context=".admin.AdminLBSActivity">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+        android:background="@color/admin_gray">
 
-        <EditText android:id="@+id/txtData1"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/txtData1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <EditText android:id="@+id/txtData2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <EditText android:id="@+id/txtData3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:hint="위험지역 사례 명"
+            android:textColor="@color/white"
+            android:textColorHint="#a4a4a4"/>
 
-        <Button android:id="@+id/btnDataAdd"
-            android:layout_width="80dp"
+        <EditText
+            android:id="@+id/txtData2"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="Add"
-            android:onClick="onClick_btnDataAdd_Custom" />
+            android:layout_below="@+id/txtData1"
+            android:layout_weight="1"
+            android:hint="X 좌표"
+            android:textColor="@color/white"
+            android:textColorHint="#a4a4a4"/>
 
-    </LinearLayout>
+        <EditText
+            android:id="@+id/txtData3"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtData1"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/txtData2"
+            android:layout_weight="1"
+            android:hint="Y 좌표"
+            android:textColor="@color/white"
+            android:textColorHint="#a4a4a4"/>
+
+        <Button
+            android:id="@+id/btnDataAdd"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:onClick="onClick_btnDataAdd_Custom"
+            android:text="추가"
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
 
     <ListView android:id="@+id/lvTest"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#3f00"
+        android:background="@color/admin_beige"
         android:listSelector="#00000000" >
 
     </ListView>

@@ -6,24 +6,37 @@
 
     <TextView android:id="@+id/txtIndex"
         android:text="0"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content" />
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
 
-    <TextView android:id="@+id/txtData1"
-        android:text="Data1"
+    <TextView
+        android:id="@+id/txtData1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-    <TextView android:id="@+id/txtData2"
-        android:text="Data2"
+        android:layout_weight="1"
+        android:text="Data1" />
+
+    <TextView
+        android:id="@+id/txtData2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-    <TextView android:id="@+id/txtData3"
-        android:text="Data2"
+        android:layout_weight="1"
+        android:text="Data2" />
+
+    <TextView
+        android:id="@+id/txtData3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:text="Data2" />
+
+    <TextView
+        android:id="@+id/txtData4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Data2" />
 
     <Button android:id="@+id/btnEdit"
         android:layout_width="80dp"

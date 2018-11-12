@@ -1,9 +1,12 @@
 package com.example.yami.posv_application.admin;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,15 +18,28 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.yami.posv_application.R;
 import com.example.yami.posv_application.activities.BaseActivity;
 import com.example.yami.posv_application.activities.MainActivity;
 import com.example.yami.posv_application.activities.PopupActivity;
 import com.example.yami.posv_application.models.dataTest;
 import com.example.yami.posv_application.notice_board.Post;
+import com.example.yami.posv_application.notice_board.PostActivity;
+import com.example.yami.posv_application.notice_board.PostDeleteRequest;
+import com.example.yami.posv_application.notice_board.PostText;
+import com.example.yami.posv_application.notice_board.WritePostActivity;
+import com.example.yami.posv_application.notice_board.WritePostRequest;
+import com.example.yami.posv_application.user_management.LoginActivity;
+import com.example.yami.posv_application.user_management.RegisterActivity;
+import com.example.yami.posv_application.user_management.RegisterRequest;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -45,7 +61,9 @@ public class AdminLBSActivity extends BaseActivity
     private Button btnDataAdd;
     private ListView lvTest;
 
-    String subject, location_x, location_y;
+    String d_num, subject, location_x, location_y;
+    String postSubject, postLocationX, getPostLocationY;
+
     private List<dangerArea> dangerAreaList;
     private List<dangerArea> saveList;
 
@@ -81,6 +99,74 @@ public class AdminLBSActivity extends BaseActivity
             }
         });*/
 
+        this.btnDataAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //DB로 보내는 변수
+                postSubject = txtData1.getText().toString();
+                postLocationX = txtData2.getText().toString();
+                getPostLocationY = txtData2.getText().toString();
+
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+                    //서버로부터 여기서 데이터를 받음
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            //서버로부터 받는 데이터는 JSON타입의 객체이다.
+                            JSONObject jsonResponse = new JSONObject(response);
+                            //그중 Key값이 "success"인 것을 가져온다.
+                            boolean success = jsonResponse.getBoolean("success");
+
+                            //회원 가입 성공시 success값이 true임
+                            if (success) {
+
+                                Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+
+                                //알림상자를 만들어서 보여줌
+                                AlertDialog.Builder builder = new AlertDialog.Builder(AdminLBSActivity.this);
+                                builder.setMessage("위험지역 등록 완료")
+                                        .setPositiveButton("ok", null)
+                                        .create()
+                                        .show();
+
+                                //그리고 첫화면으로 돌아감
+                                Intent intent = new Intent(AdminLBSActivity.this, AdminLBSActivity.class);
+                                intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                AdminLBSActivity.this.startActivity(intent);
+
+                            }
+                            //회원 가입 실패시 success값이 false임
+                            else {
+                                Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+
+                                //알림상자를 만들어서 보여줌
+                                AlertDialog.Builder builder = new AlertDialog.Builder(AdminLBSActivity.this);
+                                builder.setMessage("register fail!!")
+                                        .setNegativeButton("ok", null)
+                                        .create()
+                                        .show();
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                };//responseListener 끝
+
+                //volley 사용법
+                //1. RequestObject를 생성한다. 이때 서버로부터 데이터를 받을 responseListener를 반드시 넘겨준다.
+
+                WriteDangerRequest writeDangerRequest = new WriteDangerRequest(postSubject, postLocationX, getPostLocationY, responseListener);
+                //2. RequestQueue를 생성한다.
+                RequestQueue queue = Volley.newRequestQueue(AdminLBSActivity.this);
+                //3. RequestQueue에 RequestObject를 넘겨준다.
+                queue.add(writeDangerRequest);
+            }
+        });
+
         adapter = new CusromAdapter(this, 0, listReturn );
         this.lvTest.setAdapter(adapter);
 
@@ -98,7 +184,6 @@ public class AdminLBSActivity extends BaseActivity
 
 
         try{
-
             //intent로 값을 가져옵니다 이때 JSONObject타입으로 가져옵니다
             JSONObject jsonObject = new JSONObject(intent.getStringExtra("dangerAreaList"));
             //WritePostActivity에서 PostActivity로 넘어갈 때 받아오는 json 데이터가 없으므로 WritePostActivity에서도 json을 받아올 수 있게 해주어야함
@@ -110,14 +195,15 @@ public class AdminLBSActivity extends BaseActivity
             while(count < jsonArray.length()){
                 //count는 배열의 인덱스를 의미
                 JSONObject object = jsonArray.getJSONObject(count);
-
+                Log.d("object : ",object.toString());
+                d_num = object.optString("d_num", "no value");
                 subject = object.optString("subject", "no value");
                 location_x = object.optString("x", "no value");
                 location_y = object.optString("y", "no value");
 
                 //값들을 User클래스에 묶어줍니다
 
-                this.listReturn.add(new dataTest(count, subject, location_x, location_y));
+                this.listReturn.add(new dataTest(count,d_num,subject, location_x, location_y));
                 count++;
             }
 
@@ -159,13 +245,6 @@ public class AdminLBSActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void  onClick_btnDataAdd_Simple(View v)
-    {   //심플 Add
-        String[] sData = {"a", "b", "c", "d", "e", "f", "g"};
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1 , sData);
-        this.lvTest.setAdapter(adapter);
-    }
-
     private class CusromAdapter extends ArrayAdapter<dataTest>
     {
         //리스트에 사용할 데이터
@@ -193,6 +272,7 @@ public class AdminLBSActivity extends BaseActivity
             TextView txtData1 = (TextView)v.findViewById(R.id.txtData1);
             TextView txtData2 = (TextView)v.findViewById(R.id.txtData2);
             TextView txtData3 = (TextView)v.findViewById(R.id.txtData3);
+            TextView txtData4 = (TextView)v.findViewById(R.id.txtData4);
             Button btnEdit = (Button)v.findViewById(R.id.btnEdit);
 
             //위젯에 데이터를 넣는다.
@@ -201,6 +281,7 @@ public class AdminLBSActivity extends BaseActivity
             txtData1.setText(dataItem.Data1);
             txtData2.setText(dataItem.Data2);
             txtData3.setText(dataItem.Data3);
+            txtData4.setText(dataItem.Data4);
 
             //포지션 입력
             btnEdit.setTag(position);
@@ -217,6 +298,8 @@ public class AdminLBSActivity extends BaseActivity
                     ).show();*/
 
                     AdminLBSActivity.this.RemoveData(nPosition);
+
+
                 }
             });
 
@@ -231,7 +314,8 @@ public class AdminLBSActivity extends BaseActivity
         this.adapter.add(new dataTest(this.m_nIndex
                 , this.txtData1.getText().toString()
                 , this.txtData2.getText().toString()
-                , this.txtData3.getText().toString()));
+                , this.txtData3.getText().toString()
+                , ""));
 
         this.adapter.notifyDataSetChanged();
         ++this.m_nIndex;
@@ -239,8 +323,62 @@ public class AdminLBSActivity extends BaseActivity
 
     public void RemoveData(int nPosition)
     {
+        String test = this.listReturn.get(nPosition).Data2;
+        Log.d("nPosition" , test);
         this.adapter.remove(this.listReturn.get(nPosition));
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+
+            //서버로부터 여기서 데이터를 받음
+            @Override
+            public void onResponse(String response) {
+                try {
+                    //서버로부터 받는 데이터는 JSON타입의 객체이다.
+                    JSONObject jsonResponse = new JSONObject(response);
+                    //그중 Key값이 "success"인 것을 가져온다.
+                    boolean success = jsonResponse.getBoolean("success");
+
+                    //회원 가입 성공시 success값이 true임
+                    if (success) {
+
+                        Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+
+
+                        //그리고 첫화면으로 돌아감
+                        Intent intent = new Intent(AdminLBSActivity.this, AdminLBSActivity.class);
+                        intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        AdminLBSActivity.this.startActivity(intent);
+
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+
+                        //알림상자를 만들어서 보여줌
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AdminLBSActivity.this);
+                        builder.setMessage("register fail!!")
+                                .setNegativeButton("ok", null)
+                                .create()
+                                .show();
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };//responseListener 끝
+
+        //volley 사용법
+        //1. RequestObject를 생성한다. 이때 서버로부터 데이터를 받을 responseListener를 반드시 넘겨준다.
+
+        DangerDeleteRequest dangerDeleteRequest = new DangerDeleteRequest(test, responseListener);
+        //2. RequestQueue를 생성한다.
+        RequestQueue queue = Volley.newRequestQueue(AdminLBSActivity.this);
+        //3. RequestQueue에 RequestObject를 넘겨준다.
+        queue.add(dangerDeleteRequest);
+
     }
+
 
     class BackgroundTask extends AsyncTask<Void, Void, String> {
         String target;

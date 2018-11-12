@@ -18,24 +18,40 @@
             android:layout_marginBottom="30dp"
             android:background="@color/colorPrimaryDark"
             android:text="1. LBS 관리"
-            android:textStyle="bold"
+            android:textColor="@color/white"
             android:textSize="20sp"
-            android:textColor="@color/white"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/admin_board"
             android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/admin_lbs"
-            android:textAlignment="center"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="0dp"
-            android:gravity="center_vertical"
+            android:layout_marginBottom="30dp"
             android:background="@color/colorPrimaryDark"
+            android:gravity="center_vertical"
             android:text="2. 익명게시판 관리"
-            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/white"
             android:textSize="20sp"
-            android:textColor="@color/white"/>
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/admin_logout"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/admin_board"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center_vertical"
+            android:text="3. 로그아웃"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </LinearLayout>

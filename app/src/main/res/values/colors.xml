@@ -21,4 +21,7 @@
     <color name="board_color">#ffcf32</color>
     <color name="counselor_color">#a9ee7b</color>
     <color name="find_color">#669ee3</color>
+    <color name="admin_mint">#d1f0de</color>
+    <color name="admin_gray">#383b3a</color>
+    <color name="admin_beige">#e6e4cb</color>
 </resources>

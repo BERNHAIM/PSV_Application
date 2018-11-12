@@ -48,6 +48,12 @@ public class PostUpdate extends AppCompatActivity {
         final Button updateBtn = (Button) findViewById(R.id.btnUpdate);
         final Button cancelBtn = (Button) findViewById(R.id.btnCancel);
 
+        final String postName = intent.getStringExtra("postname");
+        final String userID = intent.getStringExtra("userID");
+        final String date = intent.getStringExtra("date");
+        final String contents = intent.getStringExtra("contents");
+
+
         postNameText.setText(intent.getStringExtra("postname"));
         contentsText.setText(intent.getStringExtra("contents"));
 
@@ -57,6 +63,24 @@ public class PostUpdate extends AppCompatActivity {
         final String s_uid = pref.getString("id", null);
         final String u_num = intent.getStringExtra("u_num");
 
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //그리고 첫화면으로 돌아감
+                Intent intent = new Intent(PostUpdate.this, PostText.class);
+                intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                intent.putExtra("p_num", postNum);
+                intent.putExtra("postname", postName);
+                intent.putExtra("userID", userID);
+                intent.putExtra("date", date);
+                intent.putExtra("contents", contents);
+                intent.putExtra("u_num", u_num);
+
+                startActivity(intent);
+            }
+        });
+
         updateBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -65,6 +89,7 @@ public class PostUpdate extends AppCompatActivity {
                 String postName = postNameText.getText().toString();                         //제목
                 String contents = contentsText.getText().toString();                         //내용
                 String userID = p_uid;                 //유저아이디 인데 익명도 해야됨
+
                 boolean check = checkBox.isChecked();
                 String anony = "익명";
 
@@ -200,4 +225,5 @@ public class PostUpdate extends AppCompatActivity {
         }
 
     }
+
 }
